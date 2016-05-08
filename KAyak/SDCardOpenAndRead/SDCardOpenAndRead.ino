@@ -1,7 +1,7 @@
 #include <SPI.h>
 #include <SD.h>
 
-File root;
+File root, readme;
 const uint8_t CLOCK_SELECT=10;
 
 void setup()
@@ -21,8 +21,10 @@ void setup()
     }
     Serial.println("initialization done.");
 
-    root = SD.open("/");
-    printDirectory(root, 0);
+    createFile();
+    readFile();
+//    root = SD.open("readme.txt");
+//    printDirectory(root, 1);
     Serial.println("done!");
 }
 
@@ -54,7 +56,38 @@ void printDirectory(File dir, int numTabs) {
 }
 
 
-void createFile() {
 
+void readFile(){
+    readme = SD.open("readme.txt");
+    if (readme) {
+        Serial.println("readme.txt:");
+
+        // read from the file until there's nothing else in it:
+        while (readme.available()) {
+            Serial.write(readme.read());
+        }
+        // close the file:
+        readme.close();
+    } else {
+        // if the file didn't open, print an error:
+        Serial.println("error opening readme.txt");
+    }
+}
+
+
+void createFile() {
+    readme = SD.open("readme.txt", FILE_WRITE);
+    if (readme) {
+        Serial.print("Writing...");
+        Serial.print("Wrote..");
+        Serial.print(readme.write("Alan Ryan"));
+        Serial.println(" chars");
+        readme.flush();
+        readme.close();
+        Serial.println("done.");
+    } else {
+        // if the file didn't open, print an error:
+        Serial.println("error opening test.txt");
+    }
 }
 
