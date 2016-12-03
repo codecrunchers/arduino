@@ -1,11 +1,12 @@
 
-#define ledPin 4
+#define ledPin 7
 int timer1_counter;
 int ledState = HIGH;             // ledState used to set the LED
 
 void setup()
 {
     init_serial();
+    pinMode(ledPin,OUTPUT);
     initTimer1();
 }
 
