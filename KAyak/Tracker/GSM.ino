@@ -1,4 +1,3 @@
-#include <SoftwareSerial.h>
 SoftwareSerial SIM900(7, 8); // configure software serial port
 
 boolean InitGSM()

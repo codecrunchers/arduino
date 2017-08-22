@@ -1,7 +1,7 @@
-#include <TinyGPS++.h>
-#include <SoftwareSerial.h>
 
-static const int RXPin = 6, TXPin = 5;
+
+
+static const int RXPin = 5, TXPin = 6;
 static const uint32_t GPSBaud = 9600;
 
 // The TinyGPS++ object
@@ -21,21 +21,52 @@ void GPSLoop(){
     if (gps.encode(gpsConn.read()))
       displayInfo();
 
-  if (millis() > 5000 && gps.charsProcessed() < 10)
+  if (millis() > 10000 && gps.charsProcessed() < 10)
   {
     Serial.println(F("No GPS detected: check wiring."));
-    while(true);
-  }
+    return;
+}
 }
 
+
+double lastLat = 0L;
+double lastLng = 0L;
+  
 void displayInfo()
 {
+  double _lat = 0;
+  double _lng = 0;
+  
+  
+  
   Serial.print(F("Location: ")); 
   if (gps.location.isValid())
   {
     Serial.print(gps.location.lat(), 6);
     Serial.print(F(","));
-    Serial.print(gps.location.lng(), 6);
+    Serial.print(_lng, 6);
+
+    if(lastLat !=0 ){   
+      Serial.println();
+      Serial.println();
+
+   
+      Serial.print(F("Distance from Prev {"));
+      Serial.print(lastLat, 6);
+      Serial.print(F(","));
+      Serial.print(lastLng, 6);
+      Serial.print(F("} is: "));      
+      double distance =  TinyGPSPlus::distanceBetween(lastLat, lastLng, _lat, _lng);    
+      Serial.print(distance, 6);
+      Serial.println();
+      Serial.println();
+
+    }
+    
+    lastLat = gps.location.lat();
+    lastLng = gps.location.lng();
+
+    
   }
   else
   {

@@ -1,5 +1,4 @@
-#include <SPI.h>
-#include <SD.h>
+
 
 const uint8_t CLOCK_SELECT=10;
 
